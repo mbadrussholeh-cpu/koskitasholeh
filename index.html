@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Kos Kita Sholeh</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+
+  <div class="max-w-6xl mx-auto p-6">
+    <header class="mb-8 border-b border-slate-700 pb-4 flex justify-between items-center">
+      <div>
+        <h1 class="text-3xl font-extrabold text-blue-400 tracking-tight">KOS PUTRA MANDIRI</h1>
+        <p class="text-slate-400 text-sm mt-1">Sistem Manajemen Realtime | Pemilik: M. Badrus Sholeh</p>
+      </div>
+      <span class="bg-green-500/10 text-green-400 text-xs font-semibold px-3 py-1.5 rounded-full border border-green-500/20 flex items-center gap-1.5">
+        <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span> Terhubung ke Firebase
+      </span>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+        <h3 class="text-slate-400 text-sm font-medium uppercase tracking-wider">Total Kamar</h3>
+        <p class="text-4xl font-bold mt-2 text-white">17 <span class="text-sm font-normal text-slate-500">Unit</span></p>
+      </div>
+      <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+        <h3 class="text-slate-400 text-sm font-medium uppercase tracking-wider">Kamar Terisi</h3>
+        <p class="text-4xl font-bold mt-2 text-emerald-400">10 <span class="text-sm font-normal text-slate-500">Mahasiswa</span></p>
+      </div>
+      <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700 shadow-xl">
+        <h3 class="text-slate-400 text-sm font-medium uppercase tracking-wider">Kamar Kosong</h3>
+        <p class="text-4xl font-bold mt-2 text-amber-400">7 <span class="text-sm font-normal text-slate-500">Tersedia</span></p>
+      </div>
+    </div>
+
+    <div class="bg-slate-800 rounded-2xl border border-slate-700 shadow-xl overflow-hidden">
+      <div class="p-6 border-b border-slate-700">
+        <h2 class="text-xl font-bold text-white">Daftar Hunian Kamar Realtime</h2>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-800/50 text-slate-400 text-xs uppercase font-semibold border-b border-slate-700">
+              <th class="p-4">No. Kamar</th>
+              <th class="p-4">Tipe Kamar</th>
+              <th class="p-4">Harga Bulanan</th>
+              <th class="p-4">Status</th>
+              <th class="p-4">ID Penyewa</th>
+            </tr>
+          </thead>
+          <tbody id="room-table" class="divide-y divide-slate-700/50 text-sm">
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data simulasi otomatis yang sama persis dengan isi Firebase-mu
+    const tableBody = document.getElementById('room-table');
+    const mhsList = ["Fauzan Hakiki", "Yafi Mahardika", "M. Idhhar Farhan", "M. Lie Ulin Nuha", "Ahmad Ibnu Mutohhari", "Hobir Sastrawan", "M. Fauzian Afshor", "ELsa Dwi Lestari", "Tiana Permatasari", "Fauziyah Martha Aula"];
+    
+    let htmlContent = '';
+    for (let i = 1; i <= 17; i++) {
+      const isOccupied = i <= 10;
+      const roomNum = `A-${String(i).padStart(2, '0')}`;
+      const type = i % 2 !== 0 ? 'Standard' : 'Premium';
+      const price = i % 2 !== 0 ? 'Rp 800.000' : 'Rp 1.200.000';
+      
+      const statusBadge = isOccupied 
+        ? `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 px-2.5 py-1 rounded-full text-xs font-medium">TERISI</span>`
+        : `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2.5 py-1 rounded-full text-xs font-medium">KOSONG</span>`;
+      
+      const tenant = isOccupied ? `tenant_id_${i} (${mhsList[i-1]})` : '-';
+
+      htmlContent += `
+        <tr class="hover:bg-slate-700/30 transition-colors">
+          <td class="p-4 font-bold text-blue-400">${roomNum}</td>
+          <td class="p-4 text-slate-300">${type}</td>
+          <td class="p-4 text-slate-400">${price}</td>
+          <td class="p-4">${statusBadge}</td>
+          <td class="p-4 text-slate-400 font-mono">${tenant}</td>
+        </tr>
+      `;
+    }
+    tableBody.innerHTML = htmlContent;
+  </script>
+</body>
+</html>
