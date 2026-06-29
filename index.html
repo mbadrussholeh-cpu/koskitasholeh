@@ -202,3 +202,30 @@
         const formatRupiah = (val) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(val);
 
         html += `
+          <tr class="hover:bg-slate-800/30 transition-all duration-150">
+            <td class="p-4 pl-6 font-bold text-blue-400 text-base">${room.roomNumber}</td>
+            <td class="p-4 text-slate-300">${room.type}</td>
+            <td class="p-4 text-slate-400 font-mono">${formatRupiah(room.price)}</td>
+            <td class="p-4">${statusBadge}</td>
+            <td class="p-4 pr-6 text-slate-300 font-medium">${room.tenant}</td>
+          </tr>
+        `;
+      });
+
+      tbody.innerHTML = html;
+    }
+
+    function filterStatus(status) {
+      currentFilter = status;
+      ['all', 'occupied', 'available'].forEach(item => {
+        document.getElementById(`btn-${item}`).className = "px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-400 hover:text-slate-200 cursor-pointer transition-all";
+      });
+      document.getElementById(`btn-${status}`).className = "px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 text-white cursor-pointer transition-all shadow-md";
+      renderList();
+    }
+
+    document.getElementById('search-box').addEventListener('input', renderList);
+    renderList();
+  </script>
+</body>
+</html>
