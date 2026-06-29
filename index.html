@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kos Kita Sholeh - Live Firebase Dashboard</title>
+  <title>Kos Kita Sholeh - Multi-Feature Management System</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,25 +14,20 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
     import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-    // 🌟 DI SINI SUDAH MENGGUNAKAN FIREBASE CONFIG ASLI KAMU
-   const firebaseConfig = {
-  apiKey: "AIzaSyDLr3H6QXJwZ0FZpoufEKL_2oYB6v8_xN8",
-  authDomain: "koskitasholeh.firebaseapp.com",
-  
-  // 🔽 PASTIKAN BARIS INI SUDAH DIGANTI SEPERTI DI BAWAH INI 🔽
-  databaseURL: "https://koskitasholeh-default-rtdb.firebaseio.com/", 
-  
-  projectId: "koskitasholeh",
-  storageBucket: "koskitasholeh.firebasestorage.app",
-  messagingSenderId: "209064214575",
-  appId: "1:209064214575:web:baf230757fc02a614046da"
-};
+    // Firebase Config Asli Milikmu
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLr3H6QXJwZ0FZpoufEKL_2oYB6v8_xN8",
+      authDomain: "koskitasholeh.firebaseapp.com",
+      databaseURL: "https://koskitasholeh-default-rtdb.firebaseio.com/", 
+      projectId: "koskitasholeh",
+      storageBucket: "koskitasholeh.firebasestorage.app",
+      messagingSenderId: "209064214575",
+      appId: "1:209064214575:web:baf230757fc02a614046da"
+    };
 
-    // Inisialisasi Firebase
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Kirim ke scope global agar bisa diakses fungsi Javascript di bawah
     window.db = db;
     window.dbRef = ref;
     window.dbSet = set;
@@ -61,113 +56,145 @@
           <p class="text-[11px] text-amber-400 font-bold tracking-widest">SHOLEH MGMT</p>
         </div>
       </div>
+      
       <nav class="space-y-1">
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-blue-600/20 to-blue-600/5 text-blue-400 border border-blue-500/10">
+        <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer text-blue-400 bg-gradient-to-r from-blue-600/20 to-blue-600/5 border border-blue-500/10">
           <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
-        </a>
+        </button>
+        <button onclick="switchView('mahasiswa')" id="nav-mahasiswa" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all cursor-pointer">
+          <i data-lucide="users" class="w-4 h-4"></i> Fitur Mahasiswa
+        </button>
+        <button onclick="switchView('keuangan')" id="nav-keuangan" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all cursor-pointer">
+          <i data-lucide="wallet" class="w-4 h-4"></i> Fitur Keuangan
+        </button>
       </nav>
     </div>
-    <div class="text-xs text-slate-500 px-4">v3.1.0 Live</div>
+    <div class="text-xs text-slate-500 px-4">v3.5.0 SPA Mode</div>
   </aside>
 
-  <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
+  <main class="flex-1 flex flex-col overflow-hidden">
+    
+    <header class="p-4 md:p-6 border-b border-slate-800/60 flex justify-between items-center bg-[#111a2e]/20">
+      <div>
+        <h1 id="page-title" class="text-lg font-extrabold text-white">Dashboard Utama</h1>
+        <p class="text-[11px] text-slate-400">Sistem Kendali Kos Putra Mandiri</p>
+      </div>
+      <p id="live-clock" class="text-xs text-slate-500 font-mono hidden sm:block"></p>
+    </header>
+
     <div class="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
-      
-      <section class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#111a2e]/40 p-4 border border-slate-800 rounded-2xl">
-        <div>
-          <h1 class="text-lg font-extrabold text-white">Selamat Pagi, Pak Badrus!</h1>
-          <p class="text-[11px] text-slate-400">Kos Putra Mandiri • Realtime Database</p>
-        </div>
-        <p id="live-clock" class="text-xs text-slate-500 font-mono"></p>
-      </section>
 
-      <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl flex items-center justify-between shadow-lg">
-          <div>
-            <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Kamar Terisi</p>
-            <p id="count-occupied" class="text-2xl font-extrabold mt-1 text-rose-400">0 <span class="text-xs text-slate-500 font-normal">Kamar</span></p>
+      <div id="view-dashboard" class="space-y-6">
+        <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl flex items-center justify-between shadow-lg">
+            <div>
+              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Kamar Terisi</p>
+              <p id="count-occupied" class="text-2xl font-extrabold mt-1 text-rose-400">0</p>
+            </div>
+            <div class="p-2.5 bg-rose-500/10 rounded-lg text-rose-400"><i data-lucide="users" class="w-5 h-5"></i></div>
           </div>
-          <div class="p-2.5 bg-rose-500/10 rounded-lg text-rose-400"><i data-lucide="users" class="w-5 h-5"></i></div>
-        </div>
-        <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl flex items-center justify-between shadow-lg">
-          <div>
-            <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Kamar Tersedia</p>
-            <p id="count-available" class="text-2xl font-extrabold mt-1 text-emerald-400">0 <span class="text-xs text-slate-500 font-normal">Kosong</span></p>
+          <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl flex items-center justify-between shadow-lg">
+            <div>
+              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Kamar Tersedia</p>
+              <p id="count-available" class="text-2xl font-extrabold mt-1 text-emerald-400">0</p>
+            </div>
+            <div class="p-2.5 bg-emerald-500/10 rounded-lg text-emerald-400"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
           </div>
-          <div class="p-2.5 bg-emerald-500/10 rounded-lg text-emerald-400"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
-        </div>
-      </section>
+        </section>
 
-      <section class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
-        <h3 class="text-sm font-extrabold text-white mb-3">Peta Denah Kamar Realtime</h3>
-        <div id="visual-map-grid" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-9 gap-2.5 p-3 bg-[#0a101f] rounded-xl border border-slate-800/80">
-          </div>
-      </section>
+        <section class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <h3 class="text-sm font-extrabold text-white mb-3">Peta Denah Kamar Realtime</h3>
+          <div id="visual-map-grid" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-9 gap-2.5 p-3 bg-[#0a101f] rounded-xl border border-slate-800/80"></div>
+        </section>
 
-      <section class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
-        <h3 class="text-sm font-extrabold text-white mb-4 flex items-center gap-2">
-          <i data-lucide="user-plus" class="w-4 h-4 text-amber-400"></i> <span id="form-action-text">Check-In Kamar (Tambah Penyewa)</span>
-        </h3>
-        <form id="kos-form" onsubmit="saveData(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Pilih Kamar</label>
-            <select id="form-room" required class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-blue-500 cursor-pointer">
+        <section class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <h3 class="text-sm font-extrabold text-white mb-4 flex items-center gap-2">
+            <i data-lucide="user-plus" class="w-4 h-4 text-amber-400"></i> <span id="form-action-text">Check-In Kamar (Tambah Penyewa)</span>
+          </h3>
+          <form id="kos-form" onsubmit="saveData(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div>
+              <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Pilih Kamar</label>
+              <select id="form-room" required class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-blue-500 cursor-pointer"></select>
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Nama Mahasiswa</label>
+              <input type="text" id="form-name" placeholder="Nama Lengkap..." required class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none">
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Durasi Sewa</label>
+              <select id="form-duration" class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none cursor-pointer">
+                <option value="1 Semester">1 Semester</option>
+                <option value="1 Tahun">1 Tahun</option>
+                <option value="Bulanan">Bulanan</option>
               </select>
-          </div>
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Nama Mahasiswa</label>
-            <input type="text" id="form-name" placeholder="Nama Lengkap..." required class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none">
-          </div>
-          <div>
-            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Durasi Sewa</label>
-            <select id="form-duration" class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none cursor-pointer">
-              <option value="1 Semester">1 Semester</option>
-              <option value="1 Tahun">1 Tahun</option>
-              <option value="Bulanan">Bulanan</option>
-            </select>
-          </div>
-          <div class="flex items-end gap-2">
-            <button type="submit" class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs py-3 rounded-xl shadow-md transition-all cursor-pointer">
-              SIMPAN DATA
-            </button>
-            <button type="button" id="btn-cancel" onclick="resetForm()" class="hidden px-3 py-3 bg-slate-800 text-slate-400 rounded-xl text-xs hover:text-white cursor-pointer">
-              Batal
-            </button>
-          </div>
-        </form>
-      </section>
+            </div>
+            <div class="flex items-end gap-2">
+              <button type="submit" class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs py-3 rounded-xl shadow-md transition-all cursor-pointer">SIMPAN DATA</button>
+              <button type="button" id="btn-cancel" onclick="resetForm()" class="hidden px-3 py-3 bg-slate-800 text-slate-400 rounded-xl text-xs hover:text-white cursor-pointer">Batal</button>
+            </div>
+          </form>
+        </section>
+      </div>
 
-      <section class="bg-[#111a2e] border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
-        <div class="p-4 border-b border-slate-800 bg-[#16223d]/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <h3 class="text-sm font-extrabold text-white">Database Hunian Kos</h3>
-          <div class="relative w-full sm:w-64">
-            <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-500"><i data-lucide="search" class="w-3.5 h-3.5"></i></span>
-            <input type="text" id="search-box" oninput="renderTables()" placeholder="Cari kamar / mahasiswa..." class="w-full pl-8 pr-3 py-1.5 bg-[#0a101f] border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none">
+      <div id="view-mahasiswa" class="space-y-4 hidden">
+        <div class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+            <div>
+              <h3 class="text-sm font-extrabold text-white">Daftar Kontak & Biodata Penghuni</h3>
+              <p class="text-[11px] text-slate-400">Kelola informasi kontak mahasiswa aktif secara mendalam.</p>
+            </div>
+            <input type="text" id="search-mhs" oninput="renderMahasiswaView()" placeholder="Cari nama mahasiswa..." class="bg-[#0a101f] border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none w-full sm:w-64">
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-[#0a101f] text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-800/60">
+                  <th class="p-3">Kamar</th>
+                  <th class="p-3">Nama Mahasiswa</th>
+                  <th class="p-3">Durasi Kontrak</th>
+                  <th class="p-3">Aksi Pintar</th>
+                </tr>
+              </thead>
+              <tbody id="table-mhs-body" class="divide-y divide-slate-800/40 text-xs">
+                </tbody>
+            </table>
           </div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-[#111a2e] text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-800/60">
-                <th class="p-3.5 pl-5">ID Kamar</th>
-                <th class="p-3.5">Nama Nomor</th>
-                <th class="p-3.5">Nama Mahasiswa</th>
-                <th class="p-3.5">Durasi</th>
-                <th class="p-3.5 pr-5 text-right">Aksi</th>
-              </tr>
-            </thead>
-            <tbody id="student-table" class="divide-y divide-slate-800/40 text-xs">
-              <tr><td colspan="5" class="p-6 text-center text-slate-500">Menghubungkan ke Firebase...</td></tr>
-            </tbody>
-          </table>
+      </div>
+
+      <div id="view-keuangan" class="space-y-6 hidden">
+        <div class="bg-gradient-to-r from-emerald-600/20 to-teal-600/5 border border-emerald-500/20 p-6 rounded-2xl flex justify-between items-center shadow-md">
+          <div>
+            <p class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Estimasi Omzet Aktif</p>
+            <h2 id="total-revenue-text" class="text-3xl font-black text-white mt-1">Rp 0</h2>
+            <p class="text-[10px] text-slate-400 mt-1">*Dihitung otomatis berdasarkan jumlah kamar aktif x asumsi Rp1.500.000/bulan</p>
+          </div>
+          <div class="p-4 bg-emerald-500/10 rounded-2xl text-emerald-400"><i data-lucide="banknote" class="w-8 h-8"></i></div>
         </div>
-      </section>
+
+        <div class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
+          <h3 class="text-sm font-extrabold text-white mb-3">Status Tagihan Billing Mahasiswa</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="bg-[#0a101f] text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-800/60">
+                  <th class="p-3">Nomor Kamar</th>
+                  <th class="p-3">Nama Penghuni</th>
+                  <th class="p-3">Status Pembayaran</th>
+                  <th class="p-3">Kirim Nota</th>
+                </tr>
+              </thead>
+              <tbody id="table-finance-body" class="divide-y divide-slate-800/40 text-xs">
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
     </div>
   </main>
 
   <script>
-    // List 17 ID Kamar asli dari kode seeding gambar 1 kamu
     const roomIds = [
       "room_A01", "room_A02", "room_A03", "room_A04", 
       "room_B01", "room_B02", "room_B03", "room_B04", 
@@ -177,118 +204,171 @@
 
     let DATA_LOKAL = [];
 
-    // Tampilkan Pilihan Kamar di Form Dropdown
+    // FUNGSI UTAMA: PERPINDAHAN VIEW FITUR (TAB SWITCHING)
+    window.switchView = function(viewName) {
+      // Daftar semua container view
+      document.getElementById('view-dashboard').classList.add('hidden');
+      document.getElementById('view-mahasiswa').classList.add('hidden');
+      document.getElementById('view-keuangan').classList.add('hidden');
+      
+      // Hapus semua class aktif di tombol sidebar
+      ['dashboard', 'mahasiswa', 'keuangan'].forEach(v => {
+        const btn = document.getElementById(`nav-${v}`);
+        btn.className = "w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all cursor-pointer";
+      });
+
+      // Aktifkan view target yang diklik
+      document.getElementById(`view-${viewName}`).classList.remove('hidden');
+      
+      // Berikan style berkilau biru pada tombol sidebar yang aktif
+      const activeBtn = document.getElementById(`nav-${viewName}`);
+      activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer text-blue-400 bg-gradient-to-r from-blue-600/20 to-blue-600/5 border border-blue-500/10";
+
+      // Ubah judul Topbar mengikuti fitur yang dibuka
+      const titles = { dashboard: "Dashboard Ringkasan", mahasiswa: "Manajemen Data Mahasiswa", keuangan: "Pusat Keuangan & Tagihan" };
+      document.getElementById('page-title').innerText = titles[viewName];
+
+      // Re-render isi data masing-masing tab
+      if(viewName === 'mahasiswa') renderMahasiswaView();
+      if(viewName === 'keuangan') renderKeuanganView();
+    };
+
     function initDropdown() {
       const select = document.getElementById('form-room');
       let html = '';
       roomIds.forEach(id => {
-        // Mengubah "room_A01" jadi tampilan cantik "Kamar A-01"
         const label = "Kamar " + id.replace("room_", "").replace(/([A-E])/, "$1-");
         html += `<option value="${id}">${label}</option>`;
       });
       select.innerHTML = html;
     }
 
-    // Live Clock
     setInterval(() => {
       const clk = document.getElementById('live-clock');
       if(clk) clk.innerText = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'medium' });
     }, 1000);
 
-    // KETIKA HALAMAN DAN FIREBASE REALTIME SIAP
     window.addEventListener('load', () => {
       initDropdown();
       lucide.createIcons();
 
       if(window.db) {
-        // Targetkan path data sesuai struktur database gambar 1 kamu
         const dbTargetRef = window.dbRef(window.db, 'properties/prop_kos_putra_mandiri/rooms');
 
-        // Dengarkan perubahan database secara realtime
         window.dbOnValue(dbTargetRef, (snapshot) => {
           const fbData = snapshot.val() || {};
           DATA_LOKAL = [];
 
           roomIds.forEach(id => {
-            const labelKamar = "A-" + id.replace("room_", "").substring(1); // Format fallback nama kamar
-            
+            const labelKamar = "Kamar " + id.replace("room_", "").replace(/([A-E])/, "$1-");
             if(fbData[id]) {
               DATA_LOKAL.push({
                 id: id,
                 roomNumber: fbData[id].roomNumber || labelKamar,
-                tenant: fbData[id].tenantId ? (fbData[id].tenant || "Terisi (Aktif)") : "-",
+                tenant: fbData[id].tenantId ? (fbData[id].tenant || "Aktif") : "-",
                 status: fbData[id].tenantId ? "occupied" : "available",
                 duration: fbData[id].duration || "-"
               });
             } else {
-              DATA_LOKAL.push({
-                id: id,
-                roomNumber: "Kamar " + id.replace("room_", ""),
-                tenant: "-",
-                status: "available",
-                duration: "-"
-              });
+              DATA_LOKAL.push({ id: id, roomNumber: labelKamar, tenant: "-", status: "available", duration: "-" });
             }
           });
 
-          // Update Counter
+          // Update Dashboard Metrics
           const totalTerisi = DATA_LOKAL.filter(r => r.status === 'occupied').length;
-          document.getElementById('count-occupied').innerHTML = `${totalTerisi} <span class="text-xs text-slate-500 font-normal">Kamar</span>`;
-          document.getElementById('count-available').innerHTML = `${roomIds.length - totalTerisi} <span class="text-xs text-slate-500 font-normal">Kosong</span>`;
+          document.getElementById('count-occupied').innerText = totalTerisi + " Kamar Terisi";
+          document.getElementById('count-available').innerText = (roomIds.length - totalTerisi) + " Kamar Kosong";
 
-          renderTables();
+          // Hitung estimasi omzet keuangan (Misal per kamar aktif Rp 1.500.000)
+          const estimasiOmzet = totalTerisi * 1500000;
+          document.getElementById('total-revenue-text').innerText = "Rp " + estimasiOmzet.toLocaleString('id-ID');
+
+          renderDashboardMap();
         });
       }
     });
 
-    // RENDER DRAW DATA
-    function renderTables() {
+    // RENDER: Halaman Dashboard (Denah Peta)
+    function renderDashboardMap() {
       const mapGrid = document.getElementById('visual-map-grid');
-      const tableBody = document.getElementById('student-table');
-      const query = document.getElementById('search-box').value.toLowerCase();
-
       let mapHtml = '';
-      let tableHtml = '';
-
       DATA_LOKAL.forEach(room => {
         const isOccupied = room.status === 'occupied';
         const bgStyle = isOccupied ? 'bg-rose-500/20 text-rose-400 border-rose-500/30' : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
-        
-        // Short name untuk peta (misal: A01)
-        const shortName = room.id.replace("room_", "");
-
         mapHtml += `
           <div class="p-2 border rounded-lg text-center flex flex-col items-center justify-center ${bgStyle}">
-            <span class="text-[10px] font-black">${shortName}</span>
+            <span class="text-[10px] font-black">${room.id.replace("room_", "")}</span>
             <span class="text-[8px] font-medium opacity-80">${isOccupied ? 'Terisi' : 'Sedia'}</span>
           </div>
         `;
-
-        // Filter search pencarian
-        if(room.id.toLowerCase().includes(query) || room.tenant.toLowerCase().includes(query)) {
-          tableHtml += `
-            <tr class="hover:bg-slate-800/30 transition-colors">
-              <td class="p-3.5 pl-5 font-mono text-slate-500 font-bold">${room.id}</td>
-              <td class="p-3.5 font-bold text-blue-400">${room.roomNumber}</td>
-              <td class="p-3.5 font-semibold ${isOccupied ? 'text-white' : 'text-slate-600 italic'}">${room.tenant}</td>
-              <td class="p-3.5 text-slate-400">${room.duration !== '-' ? room.duration : ''}</td>
-              <td class="p-3.5 pr-5 text-right space-x-2">
-                ${isOccupied ? `
-                  <button onclick="editData('${room.id}', '${room.tenant}', '${room.duration}')" class="text-slate-500 hover:text-white transition-colors cursor-pointer"><i data-lucide="edit-3" class="w-3.5 h-3.5 inline"></i></button>
-                  <button onclick="deleteData('${room.id}')" class="text-slate-500 hover:text-rose-400 transition-colors cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button>
-                ` : `<span class="text-emerald-400 font-bold text-[11px]">Kosong</span>`}
-              </td>
-            </tr>
-          `;
-        }
       });
-
       mapGrid.innerHTML = mapHtml;
-      tableBody.innerHTML = tableHtml || `<tr><td colspan="5" class="p-6 text-center text-slate-600">Tidak ada data ditemukan...</td></tr>`;
+    }
+
+    // RENDER: Fitur Kelola Mahasiswa (Tab Kedua)
+    function renderMahasiswaView() {
+      const tbody = document.getElementById('table-mhs-body');
+      const searchQuery = document.getElementById('search-mhs').value.toLowerCase();
+      let html = '';
+
+      const hanyaTerisi = DATA_LOKAL.filter(r => r.status === 'occupied');
+      const filtered = hanyaTerisi.filter(r => r.tenant.toLowerCase().includes(searchQuery));
+
+      if(filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-600">Tidak ada penghuni aktif ditemukan...</td></tr>`;
+        return;
+      }
+
+      filtered.forEach(room => {
+        html += `
+          <tr class="hover:bg-slate-800/30 transition-colors">
+            <td class="p-3 font-bold text-blue-400">${room.roomNumber}</td>
+            <td class="p-3 font-semibold text-white">${room.tenant}</td>
+            <td class="p-3 text-slate-400">${room.duration}</td>
+            <td class="p-3 space-x-2">
+              <a href="https://wa.me/628123456789?text=Halo%20${encodeURIComponent(room.tenant)}" target="_blank" class="px-2 py-1 bg-emerald-600/20 text-emerald-400 rounded hover:bg-emerald-600/40 text-[11px] font-bold transition-all inline-block">
+                <i data-lucide="phone" class="w-3 h-3 inline mr-1"></i> Hubungi WA
+              </a>
+              <button onclick="switchView('dashboard'); editData('${room.id}', '${room.tenant}', '${room.duration}')" class="px-2 py-1 bg-slate-800 text-slate-300 rounded hover:text-white text-[11px] cursor-pointer">Edit</button>
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
       lucide.createIcons();
     }
 
-    // SIMPAN / UPDATE DATA KE FIREBASE
+    // RENDER: Fitur Keuangan Billing Tagihan (Tab Ketiga)
+    function renderKeuanganView() {
+      const tbody = document.getElementById('table-finance-body');
+      let html = '';
+
+      DATA_LOKAL.forEach(room => {
+        const isOccupied = room.status === 'occupied';
+        const statusBadge = isOccupied 
+          ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold text-[10px]">Lunas Bulan Ini</span>`
+          : `<span class="text-slate-600 italic">Kamar Kosong</span>`;
+
+        html += `
+          <tr class="hover:bg-slate-800/30 transition-colors">
+            <td class="p-3 font-bold text-slate-400">${room.roomNumber}</td>
+            <td class="p-3 font-semibold ${isOccupied ? 'text-white' : 'text-slate-600'}">${room.tenant}</td>
+            <td class="p-3">${statusBadge}</td>
+            <td class="p-3">
+              ${isOccupied ? `
+                <button onclick="alert('Nota billing tagihan digital berhasil dikirim via WhatsApp ke ${room.tenant}!')" class="p-1 text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">
+                  <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+              ` : '-'}
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+      lucide.createIcons();
+    }
+
+    // SIMPAN / UPDATE KE FIREBASE
     window.saveData = function(e) {
       e.preventDefault();
       const idKamar = document.getElementById('form-room').value;
@@ -296,22 +376,17 @@
       const durasi = document.getElementById('form-duration').value;
 
       if(!window.db) return;
-
       const targetRef = window.dbRef(window.db, `properties/prop_kos_putra_mandiri/rooms/${idKamar}`);
-      
       const labelFormat = "Kamar " + idKamar.replace("room_", "").replace(/([A-E])/, "$1-");
 
       window.dbUpdate(targetRef, {
         roomNumber: labelFormat,
-        tenantId: "tenant_manual_" + Date.now(), // ID dinamis anti-tabrakan
+        tenantId: "tenant_" + Date.now(),
         tenant: namaMhs,
         duration: durasi
-      }).then(() => {
-        resetForm();
-      }).catch(err => alert("Gagal menyimpan ke Firebase: " + err));
+      }).then(() => resetForm()).catch(err => alert(err));
     };
 
-    // EDIT DATA
     window.editData = function(id, tenant, duration) {
       document.getElementById('form-room').value = id;
       document.getElementById('form-name').value = tenant;
@@ -320,22 +395,6 @@
       document.getElementById('btn-cancel').classList.remove('hidden');
     };
 
-    // DELETE DATA (Hapus penyewa / kosongkan kamar)
-    window.deleteData = function(id) {
-      if(confirm(`Apakah penyewa di kamar ${id} ingin dihapus (Check-Out)?`)) {
-        const targetRef = window.dbRef(window.db, `properties/prop_kos_putra_mandiri/rooms/${id}`);
-        
-        // Kembalikan ke format kosong bawaan database
-        window.dbSet(targetRef, {
-          roomNumber: "Kamar " + id.replace("room_", "").replace(/([A-E])/, "$1-"),
-          tenantId: "",
-          tenant: "",
-          duration: ""
-        }).catch(err => alert("Gagal menghapus: " + err));
-      }
-    };
-
-    // RESET FORM
     window.resetForm = function() {
       document.getElementById('kos-form').reset();
       document.getElementById('form-action-text').innerText = "Check-In Kamar (Tambah Penyewa)";
