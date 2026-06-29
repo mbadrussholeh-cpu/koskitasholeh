@@ -1,0 +1,12 @@
+{
+  "name": "koskita-sholeh",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "seed": "node index.js",
+    "dashboard": "node dashboard.js"
+  },
+  "dependencies": {
+    "firebase": "^10.0.0"
+  }
+}
