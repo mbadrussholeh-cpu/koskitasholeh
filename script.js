@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+import { getDatabase, ref, set, onValue, update } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
 
-// 🔐 Konfigurasi Utama Firebase Proyek Sholeh
 const firebaseConfig = {
   apiKey: "AIzaSyDLr3H6QXJwZ0FZpoufEKL_2oYB6v8_xN8",
   authDomain: "koskitasholeh.firebaseapp.com",
@@ -15,7 +14,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// Data 17 Kamar Asli
 const roomIds = [
   "room_A01", "room_A02", "room_A03", "room_A04", 
   "room_B01", "room_B02", "room_B03", "room_B04", 
@@ -25,27 +23,30 @@ const roomIds = [
 
 let DATA_LOKAL = [];
 
-// FUNGSI NAVIGASI PINDAH TAB (DIKIRIM KE SCOPE GLOBAL WINDOW)
 window.switchView = function(viewName) {
-  document.getElementById('view-dashboard').classList.add('hidden');
-  document.getElementById('view-mahasiswa').classList.add('hidden');
-  document.getElementById('view-keuangan').classList.add('hidden');
-  
-  ['dashboard', 'mahasiswa', 'keuangan'].forEach(v => {
+  ['dashboard', 'mahasiswa', 'kamar', 'keuangan'].forEach(v => {
+    const el = document.getElementById(`view-${v}`);
+    if (el) el.classList.add('hidden');
     const btn = document.getElementById(`nav-${v}`);
-    if(btn) btn.className = "w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all cursor-pointer";
+    if (btn) btn.className = "w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-500 hover:bg-pink-50 hover:text-rose-500 transition-all cursor-pointer font-cute";
   });
 
   const targetView = document.getElementById(`view-${viewName}`);
-  if(targetView) targetView.classList.remove('hidden');
+  if (targetView) targetView.classList.remove('hidden');
   
   const activeBtn = document.getElementById(`nav-${viewName}`);
-  if(activeBtn) activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer text-blue-400 bg-gradient-to-r from-blue-600/20 to-blue-600/5 border border-blue-500/10";
+  if (activeBtn) activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer text-rose-600 bg-pink-100/70 border border-pink-200/50 shadow-xs font-cute";
 
-  const titles = { dashboard: "Dashboard Ringkasan", mahasiswa: "Manajemen Data Mahasiswa", keuangan: "Pusat Keuangan & Tagihan" };
+  const titles = { 
+    dashboard: "Dashboard Utama 🌸", 
+    mahasiswa: "Buku Kontak Penghuni 📖", 
+    kamar: "Fasilitas & Inventaris Kamar 🛏️", 
+    keuangan: "Pusat Catatan Keuangan 💰" 
+  };
   document.getElementById('page-title').innerText = titles[viewName];
 
   if(viewName === 'mahasiswa') renderMahasiswaView();
+  if(viewName === 'kamar') renderKamarFasilitasView();
   if(viewName === 'keuangan') renderKeuanganView();
 };
 
@@ -60,13 +61,11 @@ function initDropdown() {
   select.innerHTML = html;
 }
 
-// Live Clock
 setInterval(() => {
   const clk = document.getElementById('live-clock');
-  if(clk) clk.innerText = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'medium' });
+  if(clk) clk.innerText = "🌸 " + new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'medium' });
 }, 1000);
 
-// Inisialisasi Saat Halaman Siap
 window.addEventListener('load', () => {
   initDropdown();
   lucide.createIcons();
@@ -93,8 +92,8 @@ window.addEventListener('load', () => {
     });
 
     const totalTerisi = DATA_LOKAL.filter(r => r.status === 'occupied').length;
-    document.getElementById('count-occupied').innerText = totalTerisi + " Kamar Terisi";
-    document.getElementById('count-available').innerText = (roomIds.length - totalTerisi) + " Kamar Kosong";
+    document.getElementById('count-occupied').innerText = totalTerisi + " Terisi 💕";
+    document.getElementById('count-available').innerText = (roomIds.length - totalTerisi) + " Sedia ✨";
 
     const estimasiOmzet = totalTerisi * 1500000;
     document.getElementById('total-revenue-text').innerText = "Rp " + estimasiOmzet.toLocaleString('id-ID');
@@ -109,11 +108,12 @@ function renderDashboardMap() {
   let mapHtml = '';
   DATA_LOKAL.forEach(room => {
     const isOccupied = room.status === 'occupied';
-    const bgStyle = isOccupied ? 'bg-rose-500/20 text-rose-400 border-rose-500/30' : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+    const style = isOccupied ? 'bg-pink-100 text-rose-500 border-pink-300' : 'bg-emerald-50 text-emerald-600 border-emerald-200';
     mapHtml += `
-      <div class="p-2 border rounded-lg text-center flex flex-col items-center justify-center ${bgStyle}">
-        <span class="text-[10px] font-black">${room.id.replace("room_", "")}</span>
-        <span class="text-[8px] font-medium opacity-80">${isOccupied ? 'Terisi' : 'Sedia'}</span>
+      <div onclick="alert('📢 ${room.roomNumber}\\nStatus: ${isOccupied ? 'Terisi oleh ' + room.tenant : 'Kamar Kosong Ready'}\\nKontrak: ${room.duration}')" 
+           class="p-2.5 border rounded-xl text-center flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-transform shadow-3xs ${style}">
+        <span class="text-[11px] font-bold font-cute">${room.id.replace("room_", "")}</span>
+        <span class="text-[8px] font-semibold opacity-80">${isOccupied ? '❤️' : '✨'}</span>
       </div>
     `;
   });
@@ -129,27 +129,52 @@ window.renderMahasiswaView = function() {
   const filtered = hanyaTerisi.filter(r => r.tenant.toLowerCase().includes(searchQuery));
 
   if(filtered.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-slate-600">Tidak ada penghuni aktif ditemukan...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-pink-300 font-medium">Belum ada teman kos tercatat...</td></tr>`;
     return;
   }
 
   filtered.forEach(room => {
     html += `
-      <tr class="hover:bg-slate-800/30 transition-colors">
-        <td class="p-3 font-bold text-blue-400">${room.roomNumber}</td>
-        <td class="p-3 font-semibold text-white">${room.tenant}</td>
-        <td class="p-3 text-slate-400">${room.duration}</td>
+      <tr class="hover:bg-pink-50/40 transition-colors">
+        <td class="p-3 font-bold text-rose-500 font-cute">${room.roomNumber}</td>
+        <td class="p-3 font-semibold text-slate-700">${room.tenant}</td>
+        <td class="p-3 text-slate-400 font-medium">${room.duration}</td>
         <td class="p-3 space-x-2">
-          <a href="https://wa.me/628123456789?text=Halo%20${encodeURIComponent(room.tenant)}" target="_blank" class="px-2 py-1 bg-emerald-600/20 text-emerald-400 rounded hover:bg-emerald-600/40 text-[11px] font-bold transition-all inline-block">
-            <i data-lucide="phone" class="w-3 h-3 inline mr-1"></i> Hubungi WA
+          <a href="https://wa.me/628123456789?text=Halo%20kak%20${encodeURIComponent(room.tenant)}%20dari%20${room.roomNumber}" target="_blank" class="px-2 py-1 bg-rose-500 text-white rounded-lg hover:bg-rose-600 text-[10px] font-bold shadow-3xs transition-all inline-block font-cute">
+            Hubungi WA 💬
           </a>
-          <button onclick="switchView('dashboard'); editData('${room.id}', '${room.tenant}', '${room.duration}')" class="px-2 py-1 bg-slate-800 text-slate-300 rounded hover:text-white text-[11px] cursor-pointer">Edit</button>
+          <button onclick="switchView('dashboard'); editData('${room.id}', '${room.tenant}', '${room.duration}')" class="px-2 py-1 bg-slate-100 text-slate-600 rounded-lg hover:bg-slate-200 text-[10px] font-bold cursor-pointer font-cute">Edit</button>
         </td>
       </tr>
     `;
   });
   tbody.innerHTML = html;
-  lucide.createIcons();
+};
+
+// 🌸 FITUR BARU: RENDER KARTU FASILITAS KAMAR
+window.renderKamarFasilitasView = function() {
+  const container = document.getElementById('cards-fasilitas-container');
+  if(!container) return;
+  let html = '';
+
+  DATA_LOKAL.forEach(room => {
+    const isOccupied = room.status === 'occupied';
+    html += `
+      <div class="bg-gradient-to-b from-white to-pink-50/20 border border-pink-100 rounded-xl p-4 shadow-3xs relative overflow-hidden">
+        <div class="absolute right-2 top-2 text-[10px] font-bold px-2 py-0.5 rounded-full ${isOccupied ? 'bg-pink-100 text-rose-500' : 'bg-emerald-100 text-emerald-600'} font-cute">
+          ${isOccupied ? 'Terisi' : 'Kosong'}
+        </div>
+        <h4 class="text-xs font-bold text-rose-600 font-cute mb-2">${room.roomNumber}</h4>
+        <div class="space-y-1 text-[11px] text-slate-500 font-medium">
+          <p>🛏️ Kasur Springbed: <span class="text-emerald-500 font-bold">Ready</span></p>
+          <p>🪑 Meja Belajar & Lemari: <span class="text-emerald-500 font-bold">Ready</span></p>
+          <p>⚡ Token Listrik: <span class="text-pink-400 font-bold">Mandiri</span></p>
+          <p class="pt-2 border-t border-pink-50 text-[10px] text-slate-400 italic">Penyewa: ${room.tenant}</p>
+        </div>
+      </div>
+    `;
+  });
+  container.innerHTML = html;
 };
 
 window.renderKeuanganView = function() {
@@ -159,17 +184,17 @@ window.renderKeuanganView = function() {
   DATA_LOKAL.forEach(room => {
     const isOccupied = room.status === 'occupied';
     const statusBadge = isOccupied 
-      ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded font-bold text-[10px]">Lunas Bulan Ini</span>`
-      : `<span class="text-slate-600 italic">Kamar Kosong</span>`;
+      ? `<span class="bg-emerald-50 text-emerald-600 border border-emerald-100 px-2 py-0.5 rounded-full font-bold text-[10px] font-cute">✨ Lunas Bulan Ini</span>`
+      : `<span class="text-slate-300 italic text-[11px]">Kamar Kosong</span>`;
 
     html += `
-      <tr class="hover:bg-slate-800/30 transition-colors">
-        <td class="p-3 font-bold text-slate-400">${room.roomNumber}</td>
-        <td class="p-3 font-semibold ${isOccupied ? 'text-white' : 'text-slate-600'}">${room.tenant}</td>
+      <tr class="hover:bg-pink-50/40 transition-colors">
+        <td class="p-3 font-bold text-slate-400 font-cute">${room.roomNumber}</td>
+        <td class="p-3 font-semibold ${isOccupied ? 'text-slate-700' : 'text-slate-300'}">${room.tenant}</td>
         <td class="p-3">${statusBadge}</td>
         <td class="p-3">
           ${isOccupied ? `
-            <button onclick="alert('Nota billing tagihan digital berhasil dikirim via WhatsApp ke ${room.tenant}!')" class="p-1 text-blue-400 hover:text-blue-300 transition-colors cursor-pointer">
+            <button onclick="alert('💌 Nota billing imut manis sudah meluncur terbang via WhatsApp ke kak ${room.tenant}!')" class="p-1 text-rose-400 hover:text-rose-500 transition-colors cursor-pointer">
               <i data-lucide="send" class="w-4 h-4"></i>
             </button>
           ` : '-'}
@@ -202,12 +227,12 @@ window.editData = function(id, tenant, duration) {
   document.getElementById('form-room').value = id;
   document.getElementById('form-name').value = tenant;
   document.getElementById('form-duration').value = duration;
-  document.getElementById('form-action-text').innerText = `Perbarui Data ${id}`;
+  document.getElementById('form-action-text').innerText = `Perbarui ${id} 🌸`;
   document.getElementById('btn-cancel').classList.remove('hidden');
 };
 
 window.resetForm = function() {
   document.getElementById('kos-form').reset();
-  document.getElementById('form-action-text').innerText = "Check-In Kamar (Tambah Penyewa)";
+  document.getElementById('form-action-text').innerText = "Check-In Kamar Unggulan";
   document.getElementById('btn-cancel').classList.add('hidden');
 };

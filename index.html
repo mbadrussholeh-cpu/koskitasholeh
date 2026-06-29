@@ -3,163 +3,183 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kos Kita Sholeh - Multi-Feature Management System</title>
+  <title>Kos Kita Sholeh 🌸 Soft Pink Edition</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
   
   <script type="module" src="script.js"></script>
 
   <style>
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0d1527; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #111a2e; }
-    ::-webkit-scrollbar-thumb { background: #1f2d4a; border-radius: 10px; }
+    body { 
+      font-family: 'Plus Jakarta Sans', sans-serif; 
+      background-color: #fff0f3;
+      background-image: radial-gradient(#ffccd5 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    .font-cute { font-family: 'Fredoka', sans-serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #ffe5ec; }
+    ::-webkit-scrollbar-thumb { background: #ffb3c1; border-radius: 10px; }
   </style>
 </head>
-<body class="text-slate-200 min-h-screen flex overflow-x-hidden">
+<body class="text-slate-700 min-h-screen flex overflow-x-hidden">
 
-  <aside class="w-64 bg-[#111a2e] border-r border-slate-800 p-5 flex flex-col justify-between hidden lg:flex shrink-0">
+  <aside class="w-64 bg-white/90 backdrop-blur-md border-r border-ffccd5 p-5 flex flex-col justify-between hidden lg:flex shrink-0 shadow-sm">
     <div>
       <div class="flex items-center gap-3 px-2 mb-8">
-        <div class="p-2.5 bg-gradient-to-br from-amber-500 to-amber-600 rounded-xl text-slate-950 shadow-md">
-          <i data-lucide="building-2" class="w-5 h-5"></i>
+        <div class="p-2.5 bg-gradient-to-br from-pink-400 to-rose-400 rounded-2xl text-white shadow-sm animate-bounce">
+          <i data-lucide="heart" class="w-5 h-5 fill-current"></i>
         </div>
         <div>
-          <h2 class="text-sm font-black text-white tracking-wider">Kos Kita</h2>
-          <p class="text-[11px] text-amber-400 font-bold tracking-widest">SHOLEH MGMT</p>
+          <h2 class="text-sm font-black text-rose-600 tracking-wider font-cute">Kos Kita</h2>
+          <p class="text-[10px] text-pink-400 font-bold tracking-widest uppercase">Sholeh Lovely Mgmt</p>
         </div>
       </div>
       
-      <nav class="space-y-1">
-        <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer text-blue-400 bg-gradient-to-r from-blue-600/20 to-blue-600/5 border border-blue-500/10">
-          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
+      <nav class="space-y-1.5">
+        <button onclick="switchView('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer text-rose-600 bg-pink-100/70 border border-pink-200/50 shadow-xs font-cute">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard Utama
         </button>
-        <button onclick="switchView('mahasiswa')" id="nav-mahasiswa" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all cursor-pointer">
-          <i data-lucide="users" class="w-4 h-4"></i> Fitur Mahasiswa
+        <button onclick="switchView('mahasiswa')" id="nav-mahasiswa" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-500 hover:bg-pink-50 hover:text-rose-500 transition-all cursor-pointer font-cute">
+          <i data-lucide="users" class="w-4 h-4"></i> Data Mahasiswa
         </button>
-        <button onclick="switchView('keuangan')" id="nav-keuangan" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all cursor-pointer">
-          <i data-lucide="wallet" class="w-4 h-4"></i> Fitur Keuangan
+        <button onclick="switchView('kamar')" id="nav-kamar" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-500 hover:bg-pink-50 hover:text-rose-500 transition-all cursor-pointer font-cute">
+          <i data-lucide="door-open" class="w-4 h-4"></i> Fasilitas Kamar
+        </button>
+        <button onclick="switchView('keuangan')" id="nav-keuangan" class="w-full flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-500 hover:bg-pink-50 hover:text-rose-500 transition-all cursor-pointer font-cute">
+          <i data-lucide="wallet" class="w-4 h-4"></i> Info Keuangan
         </button>
       </nav>
     </div>
-    <div class="text-xs text-slate-500 px-4">v3.5.0 SPA Mode</div>
+    <div class="text-[10px] text-pink-400/80 px-4 font-cute">🌸 v4.0 Cute System</div>
   </aside>
 
   <main class="flex-1 flex flex-col overflow-hidden">
     
-    <header class="p-4 md:p-6 border-b border-slate-800/60 flex justify-between items-center bg-[#111a2e]/20">
+    <header class="p-4 md:p-6 border-b border-pink-100 flex justify-between items-center bg-white/60 backdrop-blur-xs">
       <div>
-        <h1 id="page-title" class="text-lg font-extrabold text-white">Dashboard Utama</h1>
-        <p class="text-[11px] text-slate-400">Sistem Kendali Kos Putra Mandiri</p>
+        <h1 id="page-title" class="text-xl font-bold text-rose-600 font-cute">Dashboard Utama</h1>
+        <p class="text-[11px] text-pink-400 font-medium">✨ Manajemen Hunian Kos Putra Mandiri</p>
       </div>
-      <p id="live-clock" class="text-xs text-slate-500 font-mono hidden sm:block"></p>
+      <p id="live-clock" class="text-xs text-rose-400 bg-pink-50 px-3 py-1.5 rounded-full font-semibold border border-pink-100 hidden sm:block shadow-2xs"></p>
     </header>
 
     <div class="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
 
       <div id="view-dashboard" class="space-y-6">
         <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl flex items-center justify-between shadow-lg">
+          <div class="bg-white border border-pink-100/80 p-5 rounded-2xl flex items-center justify-between shadow-xs hover:scale-[1.01] transition-transform">
             <div>
-              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Kamar Terisi</p>
-              <p id="count-occupied" class="text-2xl font-extrabold mt-1 text-rose-400">0</p>
+              <p class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Kamar Terisi 💖</p>
+              <p id="count-occupied" class="text-xl font-bold mt-1 text-rose-500 font-cute">0 Kamar</p>
             </div>
-            <div class="p-2.5 bg-rose-500/10 rounded-lg text-rose-400"><i data-lucide="users" class="w-5 h-5"></i></div>
+            <div class="p-3 bg-rose-50 rounded-xl text-rose-400"><i data-lucide="heart-handshake" class="w-5 h-5"></i></div>
           </div>
-          <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl flex items-center justify-between shadow-lg">
+          <div class="bg-white border border-pink-100/80 p-5 rounded-2xl flex items-center justify-between shadow-xs hover:scale-[1.01] transition-transform">
             <div>
-              <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Kamar Tersedia</p>
-              <p id="count-available" class="text-2xl font-extrabold mt-1 text-emerald-400">0</p>
+              <p class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">Kamar Kosong ✨</p>
+              <p id="count-available" class="text-xl font-bold mt-1 text-emerald-500 font-cute">0 Kamar</p>
             </div>
-            <div class="p-2.5 bg-emerald-500/10 rounded-lg text-emerald-400"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
+            <div class="p-3 bg-emerald-50 rounded-xl text-emerald-400"><i data-lucide="sparkles" class="w-5 h-5"></i></div>
           </div>
         </section>
 
-        <section class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
-          <h3 class="text-sm font-extrabold text-white mb-3">Peta Denah Kamar Realtime</h3>
-          <div id="visual-map-grid" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-9 gap-2.5 p-3 bg-[#0a101f] rounded-xl border border-slate-800/80"></div>
+        <section class="bg-white border border-pink-100 rounded-2xl p-5 shadow-xs">
+          <h3 class="text-sm font-bold text-rose-600 mb-3 font-cute flex items-center gap-1.5"><i data-lucide="map" class="w-4 h-4"></i> Denah Denyut Kamar Realtime</h3>
+          <div id="visual-map-grid" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-9 gap-2.5 p-3 bg-pink-50/50 rounded-xl border border-pink-100/50"></div>
         </section>
 
-        <section class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
-          <h3 class="text-sm font-extrabold text-white mb-4 flex items-center gap-2">
-            <i data-lucide="user-plus" class="w-4 h-4 text-amber-400"></i> <span id="form-action-text">Check-In Kamar (Tambah Penyewa)</span>
+        <section class="bg-white border border-pink-100 rounded-2xl p-5 shadow-xs">
+          <h3 class="text-sm font-bold text-rose-600 mb-4 flex items-center gap-2 font-cute">
+            <i data-lucide="user-plus" class="w-4 h-4 text-pink-500"></i> <span id="form-action-text">Check-In Kamar Unggulan</span>
           </h3>
           <form id="kos-form" onsubmit="saveData(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
             <div>
               <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Pilih Kamar</label>
-              <select id="form-room" required class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-blue-500 cursor-pointer"></select>
+              <select id="form-room" required class="w-full bg-pink-50/40 border border-pink-100 rounded-xl p-2.5 text-xs text-slate-700 focus:outline-none focus:border-rose-400 cursor-pointer font-medium"></select>
             </div>
             <div>
               <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Nama Mahasiswa</label>
-              <input type="text" id="form-name" placeholder="Nama Lengkap..." required class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none">
+              <input type="text" id="form-name" placeholder="Ketik nama di sini..." required class="w-full bg-pink-50/40 border border-pink-100 rounded-xl p-2.5 text-xs text-slate-700 focus:outline-none focus:border-rose-400 font-medium">
             </div>
             <div>
-              <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Durasi Sewa</label>
-              <select id="form-duration" class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none cursor-pointer">
+              <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Masa Kontrak</label>
+              <select id="form-duration" class="w-full bg-pink-50/40 border border-pink-100 rounded-xl p-2.5 text-xs text-slate-700 focus:outline-none focus:border-rose-400 cursor-pointer font-medium">
                 <option value="1 Semester">1 Semester</option>
                 <option value="1 Tahun">1 Tahun</option>
                 <option value="Bulanan">Bulanan</option>
               </select>
             </div>
             <div class="flex items-end gap-2">
-              <button type="submit" class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs py-3 rounded-xl shadow-md transition-all cursor-pointer">SIMPAN DATA</button>
-              <button type="button" id="btn-cancel" onclick="resetForm()" class="hidden px-3 py-3 bg-slate-800 text-slate-400 rounded-xl text-xs hover:text-white cursor-pointer">Batal</button>
+              <button type="submit" class="flex-1 bg-gradient-to-r from-pink-400 to-rose-400 hover:from-pink-500 hover:to-rose-500 text-white font-bold text-xs py-3 rounded-xl shadow-xs transition-all cursor-pointer font-cute tracking-wide">SIMPAN DATA</button>
+              <button type="button" id="btn-cancel" onclick="resetForm()" class="hidden px-3 py-3 bg-slate-100 text-slate-500 rounded-xl text-xs hover:bg-slate-200 cursor-pointer">Batal</button>
             </div>
           </form>
         </section>
       </div>
 
       <div id="view-mahasiswa" class="space-y-4 hidden">
-        <div class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <div class="bg-white border border-pink-100 rounded-2xl p-5 shadow-xs">
           <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
             <div>
-              <h3 class="text-sm font-extrabold text-white">Daftar Kontak & Biodata Penghuni</h3>
-              <p class="text-[11px] text-slate-400">Kelola informasi kontak mahasiswa aktif secara mendalam.</p>
+              <h3 class="text-sm font-bold text-rose-600 font-cute">Buku Kontak Penghuni</h3>
+              <p class="text-[11px] text-pink-400 font-medium">Daftar kontak terintegrasi tombol WhatsApp otomatis.</p>
             </div>
-            <input type="text" id="search-mhs" oninput="renderMahasiswaView()" placeholder="Cari nama mahasiswa..." class="bg-[#0a101f] border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-200 focus:outline-none w-full sm:w-64">
+            <input type="text" id="search-mhs" oninput="renderMahasiswaView()" placeholder="Cari nama sahabat..." class="bg-pink-50/40 border border-pink-100 rounded-xl px-4 py-2 text-xs text-slate-700 focus:outline-none focus:border-rose-400 w-full sm:w-64 font-medium">
           </div>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead>
-                <tr class="bg-[#0a101f] text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-800/60">
-                  <th class="p-3">Kamar</th>
-                  <th class="p-3">Nama Mahasiswa</th>
-                  <th class="p-3">Durasi Kontrak</th>
-                  <th class="p-3">Aksi Pintar</th>
+                <tr class="bg-pink-50/70 text-rose-500 text-[10px] font-bold uppercase tracking-wider border-b border-pink-100">
+                  <th class="p-3 font-cute">Kamar</th>
+                  <th class="p-3 font-cute">Nama Mahasiswa</th>
+                  <th class="p-3 font-cute">Durasi Kontrak</th>
+                  <th class="p-3 font-cute">Aksi</th>
                 </tr>
               </thead>
-              <tbody id="table-mhs-body" class="divide-y divide-slate-800/40 text-xs"></tbody>
+              <tbody id="table-mhs-body" class="divide-y divide-pink-50 text-xs font-medium text-slate-600"></tbody>
             </table>
           </div>
         </div>
       </div>
 
-      <div id="view-keuangan" class="space-y-6 hidden">
-        <div class="bg-gradient-to-r from-emerald-600/20 to-teal-600/5 border border-emerald-500/20 p-6 rounded-2xl flex justify-between items-center shadow-md">
+      <div id="view-kamar" class="space-y-4 hidden">
+        <div class="bg-white border border-pink-100 rounded-2xl p-5 shadow-xs">
           <div>
-            <p class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Estimasi Omzet Aktif</p>
-            <h2 id="total-revenue-text" class="text-3xl font-black text-white mt-1">Rp 0</h2>
-            <p class="text-[10px] text-slate-400 mt-1">*Dihitung otomatis berdasarkan jumlah kamar aktif x asumsi Rp1.500.000/bulan</p>
+            <h3 class="text-sm font-bold text-rose-600 font-cute mb-1">Inventaris & Fasilitas Kamar</h3>
+            <p class="text-[11px] text-pink-400 font-medium mb-4">Informasi default kelayakan fasilitas di setiap kamar kos.</p>
           </div>
-          <div class="p-4 bg-emerald-500/10 rounded-2xl text-emerald-400"><i data-lucide="banknote" class="w-8 h-8"></i></div>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="cards-fasilitas-container">
+            </div>
+        </div>
+      </div>
+
+      <div id="view-keuangan" class="space-y-6 hidden">
+        <div class="bg-gradient-to-r from-pink-300/30 to-rose-300/10 border border-pink-200/60 p-6 rounded-2xl flex justify-between items-center shadow-xs">
+          <div>
+            <p class="text-rose-500 text-xs font-bold uppercase tracking-wider font-cute">Celengan Omzet Aktif 🌸</p>
+            <h2 id="total-revenue-text" class="text-3xl font-black text-rose-600 mt-1 font-cute">Rp 0</h2>
+            <p class="text-[10px] text-pink-400/90 font-medium mt-1">*Kalkulasi otomatis: Jumlah kamar terisi x Rp 1.500.000 / Bulan</p>
+          </div>
+          <div class="p-4 bg-white rounded-2xl text-rose-400 border border-pink-100 shadow-2xs"><i data-lucide="coins" class="w-8 h-8"></i></div>
         </div>
 
-        <div class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
-          <h3 class="text-sm font-extrabold text-white mb-3">Status Tagihan Billing Mahasiswa</h3>
+        <div class="bg-white border border-pink-100 rounded-2xl p-5 shadow-xs">
+          <h3 class="text-sm font-bold text-rose-600 mb-3 font-cute">Buku Catatan Billing & Tagihan Digital</h3>
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead>
-                <tr class="bg-[#0a101f] text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-800/60">
-                  <th class="p-3">Nomor Kamar</th>
-                  <th class="p-3">Nama Penghuni</th>
-                  <th class="p-3">Status Pembayaran</th>
-                  <th class="p-3">Kirim Nota</th>
+                <tr class="bg-pink-50/70 text-rose-500 text-[10px] font-bold uppercase tracking-wider border-b border-pink-100">
+                  <th class="p-3 font-cute">Nomor Kamar</th>
+                  <th class="p-3 font-cute">Nama Penghuni</th>
+                  <th class="p-3 font-cute">Status Keuangan</th>
+                  <th class="p-3 font-cute">Kirim Nota</th>
                 </tr>
               </thead>
-              <tbody id="table-finance-body" class="divide-y divide-slate-800/40 text-xs"></tbody>
+              <tbody id="table-finance-body" class="divide-y divide-pink-50 text-xs font-medium text-slate-600"></tbody>
             </table>
           </div>
         </div>
