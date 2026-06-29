@@ -3,18 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kos Kita Sholeh - Ultimate Management Dashboard</title>
+  <title>Kos Kita Sholeh - Live Firebase Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+    import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+    // 🌟 DI SINI SUDAH MENGGUNAKAN FIREBASE CONFIG ASLI KAMU
+    const firebaseConfig = {
+      apiKey: "AIzaSyDLr3H6QXJwZ0FZpoufEKL_2oYB6v8_xN8",
+      authDomain: "koskitasholeh.firebaseapp.com",
+      databaseURL: "https://koskitaapp-27dc0-default-rtdb.firebaseio.com/", // Sesuai url database di gambar 1
+      projectId: "koskitasholeh",
+      storageBucket: "koskitasholeh.firebasestorage.app",
+      messagingSenderId: "209064214575",
+      appId: "1:209064214575:web:baf230757fc02a614046da"
+    };
+
+    // Inisialisasi Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Kirim ke scope global agar bisa diakses fungsi Javascript di bawah
+    window.db = db;
+    window.dbRef = ref;
+    window.dbSet = set;
+    window.dbUpdate = update;
+    window.dbRemove = remove;
+    window.dbOnValue = onValue;
+  </script>
+
   <style>
     body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0d1527; }
-    /* Custom Scrollbar biar smooth ala SaaS profesional */
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: #111a2e; }
-    ::-webkit-scrollbar-thumb { background: #1f2d4a; rounded: 10px; }
+    ::-webkit-scrollbar-thumb { background: #1f2d4a; border-radius: 10px; }
   </style>
 </head>
 <body class="text-slate-200 min-h-screen flex overflow-x-hidden">
@@ -30,267 +58,286 @@
           <p class="text-[11px] text-amber-400 font-bold tracking-widest">SHOLEH MGMT</p>
         </div>
       </div>
-
       <nav class="space-y-1">
         <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-bold rounded-xl bg-gradient-to-r from-blue-600/20 to-blue-600/5 text-blue-400 border border-blue-500/10">
           <i data-lucide="layout-dashboard" class="w-4 h-4"></i> Dashboard
         </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all">
-          <i data-lucide="users" class="w-4 h-4"></i> Mahasiswa
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all">
-          <i data-lucide="door-closed" class="w-4 h-4"></i> Kamar
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all">
-          <i data-lucide="wallet" class="w-4 h-4"></i> Keuangan
-        </a>
-        <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-400 hover:bg-slate-800/30 hover:text-slate-200 transition-all">
-          <i data-lucide="clipboard-list" class="w-4 h-4"></i> Laporan
-        </a>
       </nav>
     </div>
-
-    <a href="#" class="flex items-center gap-3 px-4 py-3 text-xs font-semibold rounded-xl text-slate-500 hover:text-slate-300 transition-all">
-      <i data-lucide="settings" class="w-4 h-4"></i> Pengaturan System
-    </a>
+    <div class="text-xs text-slate-500 px-4">v3.1.0 Live</div>
   </aside>
 
   <main class="flex-1 flex flex-col lg:flex-row overflow-hidden">
-    
     <div class="flex-1 p-4 md:p-6 space-y-6 overflow-y-auto">
       
       <section class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[#111a2e]/40 p-4 border border-slate-800 rounded-2xl">
-        <div class="flex items-center gap-3.5">
-          <div class="w-11 h-11 bg-slate-700 rounded-full border border-slate-600 overflow-hidden shadow-inner">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="w-full h-full object-cover">
-          </div>
-          <div>
-            <h1 class="text-lg font-extrabold text-white">Selamat Pagi, Pak Badrus!</h1>
-            <p class="text-[11px] text-slate-400">Dashboard Manager • Kos Putra Mandiri</p>
-          </div>
+        <div>
+          <h1 class="text-lg font-extrabold text-white">Selamat Pagi, Pak Badrus!</h1>
+          <p class="text-[11px] text-slate-400">Kos Putra Mandiri • Realtime Database</p>
         </div>
-        <div class="flex items-center gap-2">
-          <span class="bg-emerald-500/10 text-emerald-400 text-[10px] font-bold px-3 py-1.5 rounded-xl border border-emerald-500/20 flex items-center gap-1.5">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Server RTDB Terhubung
-          </span>
-        </div>
+        <p id="live-clock" class="text-xs text-slate-500 font-mono"></p>
       </section>
 
-      <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <section class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl flex items-center justify-between shadow-lg">
           <div>
-            <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Ketersediaan Kamar</p>
-            <p class="text-xl font-extrabold mt-1 text-white">7 / 17 <span class="text-xs text-slate-500 font-normal">Tersedia</span></p>
+            <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Kamar Terisi</p>
+            <p id="count-occupied" class="text-2xl font-extrabold mt-1 text-rose-400">0 <span class="text-xs text-slate-500 font-normal">Kamar</span></p>
           </div>
-          <div class="w-12 h-12 rounded-full border-4 border-slate-800 border-t-amber-400 border-r-amber-400 flex items-center justify-center relative">
-            <span class="text-[9px] font-bold text-amber-400">41%</span>
-          </div>
+          <div class="p-2.5 bg-rose-500/10 rounded-lg text-rose-400"><i data-lucide="users" class="w-5 h-5"></i></div>
         </div>
-        <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl flex flex-col justify-between shadow-lg relative overflow-hidden">
+        <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl flex items-center justify-between shadow-lg">
           <div>
-            <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Pendapatan Bulan Ini</p>
-            <p class="text-xl font-extrabold mt-1 text-emerald-400">Rp 13.550.000</p>
+            <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Kamar Tersedia</p>
+            <p id="count-available" class="text-2xl font-extrabold mt-1 text-emerald-400">0 <span class="text-xs text-slate-500 font-normal">Kosong</span></p>
           </div>
-          <div class="w-full h-4 mt-2 bg-gradient-to-r from-emerald-500/0 via-emerald-500/10 to-emerald-500/30 rounded-lg border-b border-emerald-500/30"></div>
-        </div>
-        <div class="bg-[#111a2e] border border-slate-800 p-4 rounded-2xl shadow-lg flex flex-col justify-between">
-          <p class="text-slate-400 text-[11px] font-bold uppercase tracking-wider">Status Penghuni</p>
-          <div class="grid grid-cols-2 gap-2 mt-2 text-[11px]">
-            <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span> 10 Terisi</div>
-            <div class="flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 7 Kosong</div>
-          </div>
+          <div class="p-2.5 bg-emerald-500/10 rounded-lg text-emerald-400"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
         </div>
       </section>
 
       <section class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
-        <div class="flex justify-between items-center mb-4">
+        <h3 class="text-sm font-extrabold text-white mb-3">Peta Denah Kamar Realtime</h3>
+        <div id="visual-map-grid" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-9 gap-2.5 p-3 bg-[#0a101f] rounded-xl border border-slate-800/80">
+          </div>
+      </section>
+
+      <section class="bg-[#111a2e] border border-slate-800 rounded-2xl p-5 shadow-xl">
+        <h3 class="text-sm font-extrabold text-white mb-4 flex items-center gap-2">
+          <i data-lucide="user-plus" class="w-4 h-4 text-amber-400"></i> <span id="form-action-text">Check-In Kamar (Tambah Penyewa)</span>
+        </h3>
+        <form id="kos-form" onsubmit="saveData(event)" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
           <div>
-            <h3 class="text-sm font-extrabold text-white flex items-center gap-2"><i data-lucide="map" class="w-4 h-4 text-blue-400"></i> Peta Tata Letak Kamar Kos</h3>
-            <p class="text-[11px] text-slate-500">Representasi denah fisik lorong Kos Putra Mandiri.</p>
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Pilih Kamar</label>
+            <select id="form-room" required class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-blue-500 cursor-pointer">
+              </select>
           </div>
-          <div class="flex items-center gap-3 text-[10px] font-bold">
-            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-rose-500"></span> Terisi</span>
-            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded bg-emerald-500"></span> Kosong</span>
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Nama Mahasiswa</label>
+            <input type="text" id="form-name" placeholder="Nama Lengkap..." required class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none">
           </div>
-        </div>
-        
-        <div class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-9 gap-2.5 p-3 bg-[#0a101f] rounded-xl border border-slate-800/80">
-          <div id="visual-map-grid" class="contents"></div>
-        </div>
+          <div>
+            <label class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">Durasi Sewa</label>
+            <select id="form-duration" class="w-full bg-[#0a101f] border border-slate-800 rounded-xl p-2.5 text-xs text-white focus:outline-none cursor-pointer">
+              <option value="1 Semester">1 Semester</option>
+              <option value="1 Tahun">1 Tahun</option>
+              <option value="Bulanan">Bulanan</option>
+            </select>
+          </div>
+          <div class="flex items-end gap-2">
+            <button type="submit" class="flex-1 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs py-3 rounded-xl shadow-md transition-all cursor-pointer">
+              SIMPAN DATA
+            </button>
+            <button type="button" id="btn-cancel" onclick="resetForm()" class="hidden px-3 py-3 bg-slate-800 text-slate-400 rounded-xl text-xs hover:text-white cursor-pointer">
+              Batal
+            </button>
+          </div>
+        </form>
       </section>
 
       <section class="bg-[#111a2e] border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
         <div class="p-4 border-b border-slate-800 bg-[#16223d]/20 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-          <div>
-            <h3 class="text-sm font-extrabold text-white">Daftar Mahasiswa & Kamar</h3>
-            <p class="text-[11px] text-slate-400">Sinkronisasi data real-time dengan Firebase.</p>
-          </div>
+          <h3 class="text-sm font-extrabold text-white">Database Hunian Kos</h3>
           <div class="relative w-full sm:w-64">
             <span class="absolute inset-y-0 left-0 pl-2.5 flex items-center text-slate-500"><i data-lucide="search" class="w-3.5 h-3.5"></i></span>
-            <input type="text" id="search-box" placeholder="Cari nomor kamar / mahasiswa..." class="w-full pl-8 pr-3 py-1.5 bg-[#0a101f] border border-slate-800 rounded-xl text-xs placeholder-slate-500 text-slate-200 focus:outline-none focus:border-blue-500">
+            <input type="text" id="search-box" oninput="renderTables()" placeholder="Cari kamar / mahasiswa..." class="w-full pl-8 pr-3 py-1.5 bg-[#0a101f] border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-none">
           </div>
         </div>
-
         <div class="overflow-x-auto">
           <table class="w-full text-left border-collapse">
             <thead>
               <tr class="bg-[#111a2e] text-slate-400 text-[10px] font-bold uppercase tracking-wider border-b border-slate-800/60">
-                <th class="p-3.5 pl-5">Kamar</th>
+                <th class="p-3.5 pl-5">ID Kamar</th>
+                <th class="p-3.5">Nama Nomor</th>
                 <th class="p-3.5">Nama Mahasiswa</th>
-                <th class="p-3.5">Status Pembayaran</th>
-                <th class="p-3.5">Durasi Sewa</th>
+                <th class="p-3.5">Durasi</th>
                 <th class="p-3.5 pr-5 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody id="student-table" class="divide-y divide-slate-800/40 text-xs">
-              </tbody>
+              <tr><td colspan="5" class="p-6 text-center text-slate-500">Menghubungkan ke Firebase...</td></tr>
+            </tbody>
           </table>
         </div>
       </section>
 
     </div>
-
-    <div class="w-full lg:w-80 bg-[#111a2e]/60 border-t lg:border-t-0 lg:border-l border-slate-800 p-5 space-y-6 shrink-0 overflow-y-auto">
-      
-      <div>
-        <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
-          <i data-lucide="activity" class="w-4 h-4 text-blue-400"></i> Aktivitas Terkini
-        </h3>
-        <div class="space-y-4">
-          <div class="flex gap-3">
-            <div class="w-7 h-7 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/20"><i data-lucide="check-circle" class="w-4 h-4"></i></div>
-            <div>
-              <p class="text-xs font-bold text-white">Pembayaran dr Fauzan Sukses</p>
-              <p class="text-[10px] text-slate-400 mt-0.5">Sewa Kamar A-01 bulan Juni lunas.</p>
-              <span class="text-[9px] text-slate-500 block mt-1 font-mono">3 Menit yang lalu</span>
-            </div>
-          </div>
-          <div class="flex gap-3">
-            <div class="w-7 h-7 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center shrink-0 border border-rose-500/20"><i data-lucide="wrench" class="w-4 h-4"></i></div>
-            <div>
-              <p class="text-xs font-bold text-white">Komplain AC A-01 Diajukan</p>
-              <p class="text-[10px] text-slate-400 mt-0.5">Laporan AC bocor dari Fauzan Hakiki.</p>
-              <span class="text-[9px] text-slate-500 block mt-1 font-mono">2 Jam yang lalu</span>
-            </div>
-          </div>
-          <div class="flex gap-3">
-            <div class="w-7 h-7 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0 border border-blue-500/20"><i data-lucide="user-plus" class="w-4 h-4"></i></div>
-            <div>
-              <p class="text-xs font-bold text-white">Mahasiswa Baru Check-In</p>
-              <p class="text-[10px] text-slate-400 mt-0.5">Yafi Mahardika resmi menempati A-02.</p>
-              <span class="text-[9px] text-slate-500 block mt-1 font-mono">1 Hari yang lalu</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <hr class="border-slate-800">
-
-      <div>
-        <h3 class="text-xs font-black text-slate-400 uppercase tracking-wider mb-4">Fitur Cepat</h3>
-        <div class="space-y-2">
-          <button class="w-full py-3 px-4 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs rounded-xl flex items-center justify-between shadow-lg transition-all active:scale-[0.98] cursor-pointer">
-            <span class="flex items-center gap-2"><i data-lucide="user-plus" class="w-4 h-4"></i> Tambah Mahasiswa</span>
-            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-          </button>
-          <button class="w-full py-3 px-4 bg-[#16223d]/60 hover:bg-[#16223d] text-slate-200 border border-slate-800 font-bold text-xs rounded-xl flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer">
-            <span class="flex items-center gap-2 text-slate-400"><i data-lucide="eye" class="w-4 h-4 text-blue-400"></i> Lihat Kamar Kosong</span>
-            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-          </button>
-          <button class="w-full py-3 px-4 bg-[#16223d]/60 hover:bg-[#16223d] text-slate-200 border border-slate-800 font-bold text-xs rounded-xl flex items-center justify-between transition-all active:scale-[0.98] cursor-pointer">
-            <span class="flex items-center gap-2 text-slate-400"><i data-lucide="send" class="w-4 h-4 text-emerald-400"></i> Kirim Tagihan WhatsApp</span>
-            <i data-lucide="chevron-right" class="w-4 h-4"></i>
-          </button>
-        </div>
-      </div>
-
-    </div>
-
   </main>
 
   <script>
-    lucide.createIcons();
+    // List 17 ID Kamar asli dari kode seeding gambar 1 kamu
+    const roomIds = [
+      "room_A01", "room_A02", "room_A03", "room_A04", 
+      "room_B01", "room_B02", "room_B03", "room_B04", 
+      "room_C01", "room_C02", "room_C03", "room_C04", 
+      "room_D01", "room_D02", "room_D03", "room_D04", "room_E01"
+    ];
 
-    // Jam Digital Realtime
+    let DATA_LOKAL = [];
+
+    // Tampilkan Pilihan Kamar di Form Dropdown
+    function initDropdown() {
+      const select = document.getElementById('form-room');
+      let html = '';
+      roomIds.forEach(id => {
+        // Mengubah "room_A01" jadi tampilan cantik "Kamar A-01"
+        const label = "Kamar " + id.replace("room_", "").replace(/([A-E])/, "$1-");
+        html += `<option value="${id}">${label}</option>`;
+      });
+      select.innerHTML = html;
+    }
+
+    // Live Clock
     setInterval(() => {
-      const now = new Date();
-      document.getElementById('live-clock') && (document.getElementById('live-clock').innerText = now.toLocaleString('id-ID', { dateStyle: 'long', timeStyle: 'medium' }));
+      const clk = document.getElementById('live-clock');
+      if(clk) clk.innerText = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'medium' });
     }, 1000);
 
-    // Sinkronisasi Data Mahasiswa Sesuai Kode Seeding RTDB
-    const mhsList = ["Fauzan Hakiki", "Yafi Mahardika", "M. Idhhar Farhan", "M. Lie Ulin Nuha", "Ahmad Ibnu Mutohhari", "Hobir Sastrawan", "M. Fauzian Afshor", "ELsa Dwi Lestari", "Tiana Permatasari", "Fauziyah Martha Aula"];
-    const totalRooms = 17;
+    // KETIKA HALAMAN DAN FIREBASE REALTIME SIAP
+    window.addEventListener('load', () => {
+      initDropdown();
+      lucide.createIcons();
 
-    const ROOM_DATA = [];
-    for (let i = 1; i <= totalRooms; i++) {
-      ROOM_DATA.push({
-        roomNum: `A-${String(i).padStart(2, '0')}`,
-        type: i % 2 !== 0 ? 'Standard' : 'Premium',
-        status: i <= 10 ? 'occupied' : 'available',
-        tenant: i <= 10 ? mhsList[i-1] : '-',
-        payment: i <= 10 ? 'Lunas' : '-',
-        duration: i <= 10 ? '1 Semester' : '-'
-      });
-    }
+      if(window.db) {
+        // Targetkan path data sesuai struktur database gambar 1 kamu
+        const dbTargetRef = window.dbRef(window.db, 'properties/prop_kos_putra_mandiri/rooms');
 
-    // Fungsi Render Peta Kamar Denah Visual (Kotak Merah/Hijau)
-    function renderVisualMap() {
-      const gridContainer = document.getElementById('visual-map-grid');
-      let html = '';
-      ROOM_DATA.forEach(room => {
-        const bgClass = room.status === 'occupied' ? 'bg-rose-500/20 text-rose-400 border-rose-500/40' : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40';
-        html += `
-          <div class="p-2 border rounded-lg text-center flex flex-col items-center justify-center min-w-[55px] ${bgClass}">
-            <span class="text-[10px] font-black">${room.roomNum}</span>
-            <span class="text-[8px] font-medium opacity-80 mt-0.5">${room.status === 'occupied' ? 'Terisi' : 'Sedia'}</span>
+        // Dengarkan perubahan database secara realtime
+        window.dbOnValue(dbTargetRef, (snapshot) => {
+          const fbData = snapshot.val() || {};
+          DATA_LOKAL = [];
+
+          roomIds.forEach(id => {
+            const labelKamar = "A-" + id.replace("room_", "").substring(1); // Format fallback nama kamar
+            
+            if(fbData[id]) {
+              DATA_LOKAL.push({
+                id: id,
+                roomNumber: fbData[id].roomNumber || labelKamar,
+                tenant: fbData[id].tenantId ? (fbData[id].tenant || "Terisi (Aktif)") : "-",
+                status: fbData[id].tenantId ? "occupied" : "available",
+                duration: fbData[id].duration || "-"
+              });
+            } else {
+              DATA_LOKAL.push({
+                id: id,
+                roomNumber: "Kamar " + id.replace("room_", ""),
+                tenant: "-",
+                status: "available",
+                duration: "-"
+              });
+            }
+          });
+
+          // Update Counter
+          const totalTerisi = DATA_LOKAL.filter(r => r.status === 'occupied').length;
+          document.getElementById('count-occupied').innerHTML = `${totalTerisi} <span class="text-xs text-slate-500 font-normal">Kamar</span>`;
+          document.getElementById('count-available').innerHTML = `${roomIds.length - totalTerisi} <span class="text-xs text-slate-500 font-normal">Kosong</span>`;
+
+          renderTables();
+        });
+      }
+    });
+
+    // RENDER DRAW DATA
+    function renderTables() {
+      const mapGrid = document.getElementById('visual-map-grid');
+      const tableBody = document.getElementById('student-table');
+      const query = document.getElementById('search-box').value.toLowerCase();
+
+      let mapHtml = '';
+      let tableHtml = '';
+
+      DATA_LOKAL.forEach(room => {
+        const isOccupied = room.status === 'occupied';
+        const bgStyle = isOccupied ? 'bg-rose-500/20 text-rose-400 border-rose-500/30' : 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30';
+        
+        // Short name untuk peta (misal: A01)
+        const shortName = room.id.replace("room_", "");
+
+        mapHtml += `
+          <div class="p-2 border rounded-lg text-center flex flex-col items-center justify-center ${bgStyle}">
+            <span class="text-[10px] font-black">${shortName}</span>
+            <span class="text-[8px] font-medium opacity-80">${isOccupied ? 'Terisi' : 'Sedia'}</span>
           </div>
         `;
+
+        // Filter search pencarian
+        if(room.id.toLowerCase().includes(query) || room.tenant.toLowerCase().includes(query)) {
+          tableHtml += `
+            <tr class="hover:bg-slate-800/30 transition-colors">
+              <td class="p-3.5 pl-5 font-mono text-slate-500 font-bold">${room.id}</td>
+              <td class="p-3.5 font-bold text-blue-400">${room.roomNumber}</td>
+              <td class="p-3.5 font-semibold ${isOccupied ? 'text-white' : 'text-slate-600 italic'}">${room.tenant}</td>
+              <td class="p-3.5 text-slate-400">${room.duration !== '-' ? room.duration : ''}</td>
+              <td class="p-3.5 pr-5 text-right space-x-2">
+                ${isOccupied ? `
+                  <button onclick="editData('${room.id}', '${room.tenant}', '${room.duration}')" class="text-slate-500 hover:text-white transition-colors cursor-pointer"><i data-lucide="edit-3" class="w-3.5 h-3.5 inline"></i></button>
+                  <button onclick="deleteData('${room.id}')" class="text-slate-500 hover:text-rose-400 transition-colors cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button>
+                ` : `<span class="text-emerald-400 font-bold text-[11px]">Kosong</span>`}
+              </td>
+            </tr>
+          `;
+        }
       });
-      gridContainer.innerHTML = html;
+
+      mapGrid.innerHTML = mapHtml;
+      tableBody.innerHTML = tableHtml || `<tr><td colspan="5" class="p-6 text-center text-slate-600">Tidak ada data ditemukan...</td></tr>`;
+      lucide.createIcons();
     }
 
-    // Fungsi Render Tabel Utama & Fitur Live Search
-    function renderTable() {
-      const tbody = document.getElementById('student-table');
-      const query = document.getElementById('search-box').value.toLowerCase();
-      let html = '';
+    // SIMPAN / UPDATE DATA KE FIREBASE
+    window.saveData = function(e) {
+      e.preventDefault();
+      const idKamar = document.getElementById('form-room').value;
+      const namaMhs = document.getElementById('form-name').value;
+      const durasi = document.getElementById('form-duration').value;
 
-      const filtered = ROOM_DATA.filter(room => {
-        return room.roomNum.toLowerCase().includes(query) || room.tenant.toLowerCase().includes(query);
-      });
+      if(!window.db) return;
 
-      if (filtered.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-slate-600 font-medium text-xs">Kamar atau mahasiswa tidak ditemukan...</td></tr>`;
-        return;
+      const targetRef = window.dbRef(window.db, `properties/prop_kos_putra_mandiri/rooms/${idKamar}`);
+      
+      const labelFormat = "Kamar " + idKamar.replace("room_", "").replace(/([A-E])/, "$1-");
+
+      window.dbUpdate(targetRef, {
+        roomNumber: labelFormat,
+        tenantId: "tenant_manual_" + Date.now(), // ID dinamis anti-tabrakan
+        tenant: namaMhs,
+        duration: durasi
+      }).then(() => {
+        resetForm();
+      }).catch(err => alert("Gagal menyimpan ke Firebase: " + err));
+    };
+
+    // EDIT DATA
+    window.editData = function(id, tenant, duration) {
+      document.getElementById('form-room').value = id;
+      document.getElementById('form-name').value = tenant;
+      document.getElementById('form-duration').value = duration;
+      document.getElementById('form-action-text').innerText = `Perbarui Data ${id}`;
+      document.getElementById('btn-cancel').classList.remove('hidden');
+    };
+
+    // DELETE DATA (Hapus penyewa / kosongkan kamar)
+    window.deleteData = function(id) {
+      if(confirm(`Apakah penyewa di kamar ${id} ingin dihapus (Check-Out)?`)) {
+        const targetRef = window.dbRef(window.db, `properties/prop_kos_putra_mandiri/rooms/${id}`);
+        
+        // Kembalikan ke format kosong bawaan database
+        window.dbSet(targetRef, {
+          roomNumber: "Kamar " + id.replace("room_", "").replace(/([A-E])/, "$1-"),
+          tenantId: "",
+          tenant: "",
+          duration: ""
+        }).catch(err => alert("Gagal menghapus: " + err));
       }
+    };
 
-      filtered.forEach(room => {
-        const payBadge = room.status === 'occupied'
-          ? `<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 px-2 py-0.5 rounded-md font-bold text-[10px]">Lunas</span>`
-          : `<span class="text-slate-600">-</span>`;
-
-        html += `
-          <tr class="hover:bg-slate-800/30 transition-colors">
-            <td class="p-3.5 pl-5 font-bold text-blue-400">${room.roomNum}</td>
-            <td class="p-3.5 font-semibold text-white">${room.tenant}</td>
-            <td class="p-3.5">${payBadge}</td>
-            <td class="p-3.5 text-slate-400">${room.duration}</td>
-            <td class="p-3.5 pr-5 text-right space-x-2">
-              <button class="text-slate-500 hover:text-white transition-colors cursor-pointer"><i data-lucide="edit-3" class="w-3.5 h-3.5 inline"></i></button>
-              <button class="text-slate-500 hover:text-rose-400 transition-colors cursor-pointer"><i data-lucide="trash-2" class="w-3.5 h-3.5 inline"></i></button>
-            </td>
-          </tr>
-        `;
-      });
-
-      tbody.innerHTML = html;
-      lucide.createIcons(); // Re-render icon lucide baru di baris tabel
-    }
-
-    // Jalankan Aksi
-    document.getElementById('search-box').addEventListener('input', renderTable);
-    renderVisualMap();
-    renderTable();
+    // RESET FORM
+    window.resetForm = function() {
+      document.getElementById('kos-form').reset();
+      document.getElementById('form-action-text').innerText = "Check-In Kamar (Tambah Penyewa)";
+      document.getElementById('btn-cancel').classList.add('hidden');
+    };
   </script>
 </body>
 </html>
